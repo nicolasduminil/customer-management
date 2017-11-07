@@ -1,0 +1,27 @@
+version: "2"
+services:
+  wfy10:
+    build:
+      context: ./wfy10
+    container_name: wfy10
+    entrypoint: /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0
+    ports:
+      - 8080:8080
+      - 9990:9990
+    links:
+      - db
+
+  db:
+    image: oracle/database:11.2.0.2-xe
+    #build:
+      #context: ./oraxe
+    volumes:
+      - ./oraxe/customization:/u01/app/oracle/scripts/startup
+    container_name: oraxe
+    shm_size: 1g
+    ports:
+      - 1521:1521
+      - 80:8080
+    environment:
+      ORACLE_PWD: California1
+
