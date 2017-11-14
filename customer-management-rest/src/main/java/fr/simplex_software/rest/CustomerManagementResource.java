@@ -8,13 +8,13 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import fr.simplex_software.customer_management.data.*;
-import fr.simplex_software.customer_manager.repository.*;
+import fr.simplex_software.customer_management.repository.*;
 
 @Path("/customers")
 public class CustomerManagementResource
 {
   @Inject
-  private CustomerManagerRepository repo;
+  private CustomerManagementRepository repo;
 
   @POST
   @Consumes(MediaType.APPLICATION_JSON)

@@ -9,19 +9,13 @@
   <packaging>ear</packaging>
   <name>Customer Management :: The EAR Module</name>
   <dependencies>
-    <dependency>
-      <groupId>fr.simplex-software.rest</groupId>
-      <artifactId>customer-management-data</artifactId>
-    </dependency>
-    <dependency>
+    <!-- dependency>
       <groupId>fr.simplex-software.rest</groupId>
       <artifactId>customer-management-repository</artifactId>
-      <type>ejb</type>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>fr.simplex-software.rest</groupId>
       <artifactId>customer-management-rest</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
       <type>war</type>
     </dependency>
   </dependencies>
@@ -36,22 +30,51 @@
             <webModule>
               <groupId>fr.simplex-software.rest</groupId>
               <artifactId>customer-management-rest</artifactId>
+              <context-root>/customer-manager</context-root>
+              <bundleFileName>customer-management-rest.war</bundleFileName>
             </webModule>
-            <ejbModule>
+            <!-- jarModule>
               <groupId>fr.simplex-software.rest</groupId>
               <artifactId>customer-management-repository</artifactId>
-            </ejbModule>
+              <bundleFileName>customer-management-repository.jar</bundleFileName>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
             <jarModule>
               <groupId>fr.simplex-software.rest</groupId>
               <artifactId>customer-management-data</artifactId>
-            </jarModule>
+              <bundleFileName>customer-management-data.jar</bundleFileName>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule-->
           </modules>
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/src/main/docker/wfy10/customization/target</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/target</directory>
+                  <includes>
+                    <include>customer-management.ear</include> 
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>com.dkanejs.maven.plugins</groupId>
         <artifactId>docker-compose-maven-plugin</artifactId>
-        <version>1.0.1</version>
         <executions>
           <execution>
             <id>up</id>
@@ -62,6 +85,17 @@
             <configuration>
               <composeFile>${project.basedir}/src/main/docker/docker-compose.yml</composeFile>
               <detachedMode>true</detachedMode>
+            </configuration>
+          </execution>
+          <execution>
+            <id>down</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>down</goal>
+            </goals>
+            <configuration>
+              <composeFile>${project.basedir}/src/main/docker/docker-compose.yml</composeFile>
+              <removeVolumes>true</removeVolumes>
             </configuration>
           </execution>
         </executions>

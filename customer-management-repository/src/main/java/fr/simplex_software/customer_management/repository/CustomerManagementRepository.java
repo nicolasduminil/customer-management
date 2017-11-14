@@ -1,4 +1,4 @@
-package fr.simplex_software.customer_manager.repository;
+package fr.simplex_software.customer_management.repository;
 
 import java.math.*;
 import java.util.*;
@@ -8,7 +8,7 @@ import org.apache.deltaspike.data.api.*;
 import fr.simplex_software.customer_management.data.*;
 
 @Repository
-public interface CustomerManagerRepository extends EntityRepository<Customer, BigInteger>
+public interface CustomerManagementRepository extends EntityRepository<Customer, BigInteger>
 {
   public List<Customer> findByFirsName(String firstName);
   public List<Customer> findByLastName (String lastName);

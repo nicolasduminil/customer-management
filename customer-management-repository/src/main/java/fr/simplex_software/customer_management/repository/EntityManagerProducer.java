@@ -1,11 +1,11 @@
-package fr.simplex_software.customer_manager.repository;
+package fr.simplex_software.customer_management.repository;
 
 import javax.enterprise.inject.*;
 import javax.persistence.*;
 
 public class EntityManagerProducer
 {
-  @PersistenceContext
+  @PersistenceContext(unitName = "customers")
   private EntityManager em;
 
   @Produces
