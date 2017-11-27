@@ -9,14 +9,27 @@
   <packaging>ear</packaging>
   <name>Customer Management :: The EAR Module</name>
   <dependencies>
-    <!-- dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
       <groupId>fr.simplex-software.rest</groupId>
       <artifactId>customer-management-repository</artifactId>
-    </dependency-->
+    </dependency>
     <dependency>
       <groupId>fr.simplex-software.rest</groupId>
       <artifactId>customer-management-rest</artifactId>
       <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>fr.simplex-software.rest</groupId>
+      <artifactId>customer-management-facade</artifactId>
+      <type>ejb</type>
+    </dependency>
+    <dependency>
+      <groupId>fr.simplex-software.rest</groupId>
+      <artifactId>customer-management-data</artifactId>
     </dependency>
   </dependencies>
   <build>
@@ -26,25 +39,36 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-ear-plugin</artifactId>
         <configuration>
+          <defaultLibBundleDir>lib</defaultLibBundleDir>
+          <skinnyWars>true</skinnyWars>
           <modules>
             <webModule>
               <groupId>fr.simplex-software.rest</groupId>
               <artifactId>customer-management-rest</artifactId>
-              <context-root>/customer-manager</context-root>
+              <context-root>/customer-management</context-root>
               <bundleFileName>customer-management-rest.war</bundleFileName>
+              <bundleDir>/</bundleDir>
             </webModule>
-            <!-- jarModule>
+            <ejbModule>
+              <groupId>fr.simplex-software.rest</groupId>
+              <artifactId>customer-management-facade</artifactId>
+              <bundleFileName>customer-management-facade.jar</bundleFileName>
+              <bundleDir>/</bundleDir>
+            </ejbModule>
+            <jarModule>
               <groupId>fr.simplex-software.rest</groupId>
               <artifactId>customer-management-repository</artifactId>
               <bundleFileName>customer-management-repository.jar</bundleFileName>
               <includeInApplicationXml>true</includeInApplicationXml>
+              <bundleDir>/</bundleDir>
             </jarModule>
             <jarModule>
               <groupId>fr.simplex-software.rest</groupId>
               <artifactId>customer-management-data</artifactId>
               <bundleFileName>customer-management-data.jar</bundleFileName>
               <includeInApplicationXml>true</includeInApplicationXml>
-            </jarModule-->
+              <bundleDir>/</bundleDir>
+            </jarModule>
           </modules>
         </configuration>
       </plugin>
@@ -64,7 +88,7 @@
                 <resource>
                   <directory>${basedir}/target</directory>
                   <includes>
-                    <include>customer-management.ear</include> 
+                    <include>customer-management.ear</include>
                   </includes>
                 </resource>
               </resources>

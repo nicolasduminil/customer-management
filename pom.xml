@@ -4,7 +4,7 @@
   <artifactId>customer-management</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>CustmerManagement :: The Master POM</name>
+  <name>Customer Management :: The Master POM</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.wildfly.bom>10.1.1.Final</version.wildfly.bom>
@@ -13,6 +13,7 @@
     <version.slf4j>1.7.25</version.slf4j>
     <version.failsafe.plugin>2.18.1</version.failsafe.plugin>
     <version.weld>1.1.28.Final</version.weld>
+    <version.apache.commons>3.0</version.apache.commons>
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
   </properties>
@@ -33,7 +34,7 @@
       <dependency>
         <groupId>org.apache.deltaspike.distribution</groupId>
         <artifactId>distributions-bom</artifactId>
-        <version>1.6.1</version>
+        <version>1.8.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -46,6 +47,11 @@
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
         <version>${version.slf4j}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${version.apache.commons}</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
@@ -62,6 +68,12 @@
         <groupId>fr.simplex-software.rest</groupId>
         <artifactId>customer-management-repository</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>fr.simplex-software.rest</groupId>
+        <artifactId>customer-management-facade</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <type>ejb</type>
       </dependency>
       <dependency>
         <groupId>fr.simplex-software.rest</groupId>
@@ -99,10 +111,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-ejb-plugin</artifactId>
           <version>2.5.1</version>
-          <configuration>
-            <ejbVersion>3.0</ejbVersion>
-            <type>ejb</type>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -126,6 +134,7 @@
     <module>customer-management-rest</module>
     <module>customer-management-data</module>
     <module>customer-management-repository</module>
-    <!-- module>customer-management-ear</module-->
+    <module>customer-management-facade</module>
+    <module>customer-management-ear</module>
   </modules>
 </project>

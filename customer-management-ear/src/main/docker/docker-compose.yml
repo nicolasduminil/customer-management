@@ -1,17 +1,5 @@
 version: "2"
 services:
-  wfy10:
-    build:
-      context: ./wfy10
-    image: wfy10_oracle
-    container_name: wfy10
-    entrypoint: /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0
-    ports:
-      - 8080:8080
-      - 9990:9990
-    links:
-      - db
-
   db:
     image: oracle/database:11.2.0.2-xe
     volumes:
@@ -23,3 +11,17 @@ services:
       - 80:8080
     environment:
       ORACLE_PWD: California1
+
+  wfy10:
+    image: jboss/wildfly:10.1.0.Final
+    volumes:
+      - ./wfy10/customization:/opt/jboss/wildfly/customization/
+    container_name: wfy10
+    entrypoint: /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0
+    ports:
+      - 8080:8080
+      - 9990:9990
+    links:
+      - db:db
+    depends_on:
+     - "db"

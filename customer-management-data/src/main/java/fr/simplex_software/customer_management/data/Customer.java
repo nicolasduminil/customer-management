@@ -4,7 +4,10 @@ import java.io.*;
 import java.math.*;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.*;
 
+@XmlRootElement(name="customer")
+@XmlAccessorType(XmlAccessType.PROPERTY)
 @Entity
 @Table(name="CUSTOMERS")
 public class Customer implements Serializable
@@ -25,6 +28,7 @@ public class Customer implements Serializable
 
   public Customer(String firstName, String lastName, String street, String city, String state, String zip, String country)
   {
+    this.firstName = firstName;
     this.lastName = lastName;
     this.street = street;
     this.city = city;
@@ -53,6 +57,7 @@ public class Customer implements Serializable
     this.id = id;
   }
 
+  @XmlElement
   @Column(name = "FIRST_NAME", nullable = false, length = 40)
   public String getFirstName()
   {
@@ -64,6 +69,7 @@ public class Customer implements Serializable
     this.firstName = firstName;
   }
 
+  @XmlElement
   @Column(name = "LAST_NAME", nullable = false, length = 40)
   public String getLastName()
   {
@@ -75,6 +81,7 @@ public class Customer implements Serializable
     this.lastName = lastName;
   }
 
+  @XmlElement
   @Column(name = "ADDRESS_STREET", nullable = false, length = 80)
   public String getStreet()
   {
@@ -86,6 +93,7 @@ public class Customer implements Serializable
     this.street = street;
   }
 
+  @XmlElement
   @Column(name = "ADDRESS_CITY", nullable = false, length = 80)
   public String getCity()
   {
@@ -97,6 +105,7 @@ public class Customer implements Serializable
     this.city = city;
   }
 
+  @XmlElement
   @Column(name = "ADDRESS_STATE", nullable = false, length = 40)
   public String getState()
   {
@@ -108,6 +117,7 @@ public class Customer implements Serializable
     this.state = state;
   }
 
+  @XmlElement
   @Column(name = "ADDRESS_ZIP", nullable = false, length = 8)
   public String getZip()
   {
@@ -119,6 +129,7 @@ public class Customer implements Serializable
     this.zip = zip;
   }
 
+  @XmlElement
   @Column(name = "ADDRESS_COUNTRY", nullable = false, length = 40)
   public String getCountry()
   {
