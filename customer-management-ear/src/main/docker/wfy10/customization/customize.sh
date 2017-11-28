@@ -32,7 +32,7 @@ $JBOSS_CLI -c << EOF > /dev/null 2>&1
 /subsystem=datasources/jdbc-driver=h2:remove
 module add --name=com.oracle --resources=/opt/jboss/wildfly/customization/ojdbc6.jar --dependencies=javax.api,javax.transaction.api
 /subsystem=datasources/jdbc-driver=com.oracle:add(driver-name=com.oracle, driver-module-name=com.oracle, driver-xa-datasource-class-name=oracle.jdbc.xa.client.OracleXADataSource)
-data-source add --name=ExampleDS --driver-name=com.oracle --jndi-name=java:jboss/datasources/ExampleDS --connection-url=jdbc:oracle:thin:@172.19.0.2:1521:XE --user-name=nicolas --password=California1 --max-pool-size=25 --valid-connection-checker-class-name=org.jboss.jca.adapters.jdbc.extensions.oracle.OracleValidConnectionChecker, --stale-connection-checker-class-name=org.jboss.jca.adapters.jdbc.extensions.oracle.OracleStaleConnectionChecker, --exception-sorter-class-name=org.jboss.jca.adapters.jdbc.extensions.oracle.OracleExcectionSorter
+data-source add --name=ExampleDS --driver-name=com.oracle --jndi-name=java:jboss/datasources/ExampleDS --connection-url=jdbc:oracle:thin:@db:1521:XE --user-name=nicolas --password=California1 --max-pool-size=25 --valid-connection-checker-class-name=org.jboss.jca.adapters.jdbc.vendor.OracleValidConnectionChecker, --stale-connection-checker-class-name=org.jboss.jca.adapters.jdbc.vendor.OracleStaleConnectionChecker, --exception-sorter-class-name=org.jboss.jca.adapters.jdbc.extensions.oracle.OracleExceptionSorter
 data-source  enable --name=ExampleDS
 /subsystem=infinispan/cache-container=oauth20:add(jndi-name="infinispan/oauth20-container", default-cache="clientid")
 /subsystem=infinispan/cache-container=oauth20/local-cache=clientid:add()

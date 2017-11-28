@@ -25,3 +25,15 @@ services:
       - db:db
     depends_on:
      - "db"
+
+  keycloak:
+    image: jboss/keycloak:latest
+    container_name: keycloak
+    entrypoint: /opt/jboss/docker-entrypoint.sh -b 0.0.0.0
+    ports:
+      - 18080:8080
+      - 19990:9990
+    environment:
+      KEYCLOAK_USER: nicolas
+      KEYCLOAK_PASSWORD: California1  
+     
