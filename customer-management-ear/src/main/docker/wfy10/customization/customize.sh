@@ -15,17 +15,11 @@ function wait_for_jdbc_connection() {
   done
 }
 
-echo $(date -u) "=> Starting WildFly server"
-$WILDFLY_HOME/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 > /dev/null 2>&1 &
-
-echo $(date -u) "=> Waiting for the server to boot"
-wait_for_server
-
-echo $(date -u) "=> Removing data source ExampleDS, if any"
+echo $(date -u) "=> Removing data source ExampleDS, if any, from the Wildfly server configuration"
 $JBOSS_CLI -c "data-source remove --name=ExampleDS" > /dev/null 2>&1
 $JBOSS_CLI -c ":reload" > /dev/null 2>&1
 
-echo $(date -u) "=> Waiting for the server to reload"
+echo $(date -u) "=> Waiting for the Wildfly server to reload"
 wait_for_server
 
 $JBOSS_CLI -c << EOF > /dev/null 2>&1
@@ -40,12 +34,12 @@ data-source  enable --name=ExampleDS
 /subsystem=infinispan/cache-container=oauth20/local-cache=clientid/component=eviction:write-attribute(name=strategy, value="NONE")
 :reload
 EOF
-echo $(date -u) "=> Infinispan cache and Oracle data-source and driver correctly configured. Waiting for the server to reload"
+echo $(date -u) "=> Infinispan cache and Oracle data-source and driver correctly configured. Waiting for the Wildfly server to reload"
 wait_for_server
 echo $(date -u) "=> The Wildfly server started successfully"
-echo $(date -u) "=> Testing the new ExampleDS datasource"
+echo $(date -u) "=> Testing the new Wildfly ExampleDS datasource"
 wait_for_jdbc_connection
-echo $(date -u) "=> ExampleDS datasource for Oracle test has succeeded"
+echo $(date -u) "=> The Wildfly ExampleDS datasource for Oracle test has succeeded"
 $WILDFLY_HOME/bin/add-user.sh nicolas California1$
 echo $(date -u) "=> Deploying customer-management.ear"
 $JBOSS_CLI -c "deploy ./wildfly/customization/target/customer-management.ear"

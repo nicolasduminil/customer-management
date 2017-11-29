@@ -28,6 +28,8 @@ services:
 
   keycloak:
     image: jboss/keycloak:latest
+    volumes:
+      - ./keycloak/customization:/opt/jboss/keycloak/customization/
     container_name: keycloak
     entrypoint: /opt/jboss/docker-entrypoint.sh -b 0.0.0.0
     ports:
@@ -36,4 +38,8 @@ services:
     environment:
       KEYCLOAK_USER: nicolas
       KEYCLOAK_PASSWORD: California1  
+    links:
+     - db:db
+    depends_on:
+     - "db"
      

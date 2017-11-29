@@ -9,3 +9,8 @@ echo $(date -u) "=> Waiting for the Oracle XE database to start. This might last
 wait_for_db
 echo $(date -u) "=> The Oracle XE database has started"
 docker exec -ti wfy10 wildfly/customization/customize.sh
+#docker exec -ti keycloak keycloak/customization/customize.sh
+echo $(date -u) "=> Running the Wildfly embedded server to configure Keycloak datasources and Oracle JDBC drivers"
+docker exec -ti keycloak keycloak/bin/jboss-cli.sh --file=keycloak/customization/run-embedded.cli
+echo $(date -u) "=> The Keycloak datasources and Oracle JDBC drivers have been configured successfully"
+
