@@ -1,3 +1,0 @@
-embed-server --server-config=standalone.xml --std-out=echo
-run-batch --file=keycloak/customization/customize.cli
-stop-embedded-server

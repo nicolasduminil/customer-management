@@ -15,33 +15,35 @@ function wait_for_jdbc_connection() {
   done
 }
 
-echo $(date -u) "=> Removing data source ExampleDS, if any, from the Wildfly server configuration"
-$JBOSS_CLI -c "data-source remove --name=ExampleDS" > /dev/null 2>&1
-$JBOSS_CLI -c ":reload" > /dev/null 2>&1
+echo $(date -u) "=> Replacing H2 JDBC drivers and ExampleDS datasource by the Oracle XE ones"
+$JBOSS_CLI --file=$WILDFLY_HOME/customization/customize.cli > /dev/null
 
-echo $(date -u) "=> Waiting for the Wildfly server to reload"
-wait_for_server
-
-$JBOSS_CLI -c << EOF > /dev/null 2>&1
-/subsystem=datasources/jdbc-driver=h2:remove
-module add --name=com.oracle --resources=/opt/jboss/wildfly/customization/ojdbc6.jar --dependencies=javax.api,javax.transaction.api
-/subsystem=datasources/jdbc-driver=com.oracle:add(driver-name=com.oracle, driver-module-name=com.oracle, driver-xa-datasource-class-name=oracle.jdbc.xa.client.OracleXADataSource)
-data-source add --name=ExampleDS --driver-name=com.oracle --jndi-name=java:jboss/datasources/ExampleDS --connection-url=jdbc:oracle:thin:@db:1521:XE --user-name=nicolas --password=California1 --max-pool-size=25 --valid-connection-checker-class-name=org.jboss.jca.adapters.jdbc.vendor.OracleValidConnectionChecker, --stale-connection-checker-class-name=org.jboss.jca.adapters.jdbc.vendor.OracleStaleConnectionChecker, --exception-sorter-class-name=org.jboss.jca.adapters.jdbc.extensions.oracle.OracleExceptionSorter
-data-source  enable --name=ExampleDS
-/subsystem=infinispan/cache-container=oauth20:add(jndi-name="infinispan/oauth20-container", default-cache="clientid")
-/subsystem=infinispan/cache-container=oauth20/local-cache=clientid:add()
-/subsystem=infinispan/cache-container=oauth20/local-cache=clientid/component=transaction:write-attribute(name=mode, value="NONE")
-/subsystem=infinispan/cache-container=oauth20/local-cache=clientid/component=eviction:write-attribute(name=strategy, value="NONE")
-:reload
-EOF
-echo $(date -u) "=> Infinispan cache and Oracle data-source and driver correctly configured. Waiting for the Wildfly server to reload"
+echo $(date -u) "=> Oracle JDBC drivers and ExampleDS datasource customization terminated. Waiting for the Wildfly server to reload"
+$JBOSS_CLI -c ":reload" > /dev/null
 wait_for_server
 echo $(date -u) "=> The Wildfly server started successfully"
 echo $(date -u) "=> Testing the new Wildfly ExampleDS datasource"
 wait_for_jdbc_connection
 echo $(date -u) "=> The Wildfly ExampleDS datasource for Oracle test has succeeded"
+
 $WILDFLY_HOME/bin/add-user.sh nicolas California1$
+
 echo $(date -u) "=> Deploying customer-management.ear"
 $JBOSS_CLI -c "deploy ./wildfly/customization/target/customer-management.ear"
 echo $(date -u) "=> customer-management.ear successfully deployed"
+
+echo $(date -u) "=> Downloading the Keycloak Adapter for Wildfly"
+if [ ! -f  ./keycloak-wildfly-adapter-dist-3.4.0.Final.tar.gz ]
+then
+  echo $(date -u) "=> Keycloak Adapter for Wildfly not yet downloaded. Dowloading it."
+  curl -O -s https://downloads.jboss.org/keycloak/3.4.0.Final/adapters/keycloak-oidc/keycloak-wildfly-adapter-dist-3.4.0.Final.tar.gz  
+else
+  echo $(date -u) "=> Keycloak Adapter for Wildfly already downloaded."
+fi
+echo $(date -u) "=> Unpacking Keycloak Adapter for Wildfly."
+tar xzf keycloak-wildfly-adapter-dist-3.4.0.Final.tar.gz -C $WILDFLY_HOME
+
+echo $(date -u) "=> Installing Keycloak Adapter for Wildfly."
+$JBOSS_CLI --file=$WILDFLY_HOME/bin/adapter-install-offline.cli > /dev/null
+echo $(date -u) "=> Keycloak Adapter for Wildfly installed successfully."
 
