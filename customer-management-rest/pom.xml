@@ -7,7 +7,7 @@
   </parent>
   <artifactId>customer-management-rest</artifactId>
   <packaging>war</packaging>
-  <name>Customer Management :: REST Module</name>
+  <name>Customer Management :: The REST Module</name>
   <dependencies>
     <dependency>
       <groupId>javax.enterprise</groupId>
@@ -41,7 +41,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-jackson-provider</artifactId>
+      <artifactId>resteasy-jackson2-provider</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -53,13 +53,28 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-adapter-core</artifactId>
+      <scope>provided</scope>
+    </dependency>
       <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-admin-client</artifactId>
+        <scope>provided</scope>
       </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -69,13 +84,13 @@
     <dependency>
       <groupId>fr.simplex-software.rest</groupId>
       <artifactId>customer-management-repository</artifactId>
-      <scope>provided</scope>
+      <!-- scope>provided</scope-->
     </dependency>
     <dependency>
       <groupId>fr.simplex-software.rest</groupId>
       <artifactId>customer-management-facade</artifactId>
       <type>ejb</type>
-      <scope>provided</scope>
+      <!-- scope>provided</scope-->
     </dependency>
     <dependency>
       <groupId>fr.simplex-software.rest</groupId>
@@ -90,7 +105,6 @@
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
-          <!-- packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes-->
         </configuration>
       </plugin>
     </plugins>

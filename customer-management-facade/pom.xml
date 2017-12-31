@@ -7,7 +7,7 @@
   </parent>
   <artifactId>customer-management-facade</artifactId>
   <packaging>ejb</packaging>
-  <name>Customer Management :: EJB JAR Module</name>
+  <name>Customer Management :: The EJB JAR Module</name>
   <dependencies>
     <dependency>
       <groupId>fr.simplex-software.rest</groupId>

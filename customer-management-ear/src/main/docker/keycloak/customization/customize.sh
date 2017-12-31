@@ -1,7 +1,9 @@
 #!/bin/bash
 
-KEYCLOAK_HOME=/opt/jboss/keycloak
-JBOSS_CLI=$KEYCLOAK_HOME/bin/jboss-cli.sh
+WILDFLY_HOME=/opt/jboss/keycloak
+JBOSS_CLI=$WILDFLY_HOME/bin/jboss-cli.sh
+KCADM=$WILDFLY_HOME/bin/kcadm.sh
+KCREG=$WILDFLY_HOME/bin/kcreg.sh
 
 function wait_for_server() {
   until `$JBOSS_CLI -c ":read-attribute(name=server-state)" 2> /dev/null | grep -q running`; do
@@ -9,45 +11,21 @@ function wait_for_server() {
   done
 }
 
-function wait_for_exampleds_connection() {
-  until `$JBOSS_CLI -c "/subsystem=datasources/data-source=ExampleDS:test-connection-in-pool" 2> /dev/null | grep -q [true]`; do
-    sleep 1
-  done
-}
-
-function wait_for_keycloakds_connection() {
-  until `$JBOSS_CLI -c "/subsystem=datasources/data-source=KeycloakDS:test-connection-in-pool" 2> /dev/null | grep -q [true]`; do
-    sleep 1
-  done
-}
-
-echo $(date -u) "=> Removing data source KeycloakDS, if any, from the Keycloak server configuration"
-$JBOSS_CLI -c "data-source remove --name=KeycloakDS" > /dev/null 2>&1
-echo $(date -u) "=> Removing data source ExampleDS, if any, from the Keycloak server configuration"
-$JBOSS_CLI -c "data-source remove --name=ExampleDS" > /dev/null 2>&1
-$JBOSS_CLI -c ":reload" > /dev/null 2>&1
-
-echo $(date -u) "=> Waiting for the Keycloak server to reload"
-wait_for_server
-echo $(date -u) "=> The Keycloak server has started successfully"
-
-$JBOSS_CLI -c << EOF
-/subsystem=datasources/jdbc-driver=h2:remove
-module add --name=com.oracle --resources=/opt/jboss/keycloak/customization/ojdbc6.jar --dependencies=javax.api,javax.transaction.api
-/subsystem=datasources/jdbc-driver=com.oracle:add(driver-name=com.oracle, driver-module-name=com.oracle, driver-xa-datasource-class-name=oracle.jdbc.xa.client.OracleXADataSource)
-data-source add --name=ExampleDS --driver-name=com.oracle --jndi-name=java:jboss/datasources/ExampleDS --connection-url=jdbc:oracle:thin:@db:1521:XE --user-name=nicolas --password=California1 --max-pool-size=25 --valid-connection-checker-class-name=org.jboss.jca.adapters.jdbc.vendor.OracleValidConnectionChecker, --stale-connection-checker-class-name=org.jboss.jca.adapters.jdbc.vendor.OracleStaleConnectionChecker, --exception-sorter-class-name=org.jboss.jca.adapters.jdbc.extensions.oracle.OracleExceptionSorter
-data-source  enable --name=ExampleDS
-data-source add --name=KeycloakDS --driver-name=com.oracle --jndi-name=java:jboss/datasources/KeycloakDS --connection-url=jdbc:oracle:thin:@db:1521:XE --user-name=nicolas --password=California1 --max-pool-size=25 --valid-connection-checker-class-name=org.jboss.jca.adapters.jdbc.vendor.OracleValidConnectionChecker, --stale-connection-checker-class-name=org.jboss.jca.adapters.jdbc.vendor.OracleStaleConnectionChecker, --exception-sorter-class-name=org.jboss.jca.adapters.jdbc.extensions.oracle.OracleExceptionSorter
-data-source  enable --name=KeycloakDS
-:reload
-EOF
-echo $(date -u) "=> Oracle data-source and driver correctly configured for the Keycloak server. Waiting for the Wildfly server to reload"
-wait_for_server
-echo $(date -u) "=> The Keycloak server started successfully"
-echo $(date -u) "=> Testing the new ExampleDS datasource for the Keycloak server"
-wait_for_exampleds_connection
-echo $(date -u) "=> The test of the Oracle ExampleDS datasource for the Keycloak server has succeeded"
-echo $(date -u) "=> Testing the new KeycloakDS datasource for the Keycloak server"
-wait_for_keycloakds_connection
-echo $(date -u) "=> The test of the Oracle KeyCloakDS datasource for the Keycloak server has succeeded"
+echo $(date -u) "=> Customizing the Keycloak server"
+#$JBOSS_CLI --file=keycloak/customization/customize.cli
+echo $(date -u) "=> Successfuly executed customize.cli"
+$KCADM config credentials --server http://localhost:8080/auth --realm master --user nicolas --password California1
+$KCADM create realms -s realm=demo-realm -s enabled=true 
+echo $(date -u) "=> Successfuly created demo-realm"
+$KCADM create users -r demo-realm -s username=customer-manager-user -s enabled=true
+$KCADM set-password -r demo-realm --username customer-manager-user --new-password California1
+echo $(date -u) "=> Successfuly created customer-manager-user"
+$KCADM create clients -r demo-realm -s clientId=customer-manager-client -s bearerOnly="true" -s "redirectUris=[\"http://localhost:8080/customer-management/*\"]" -s enabled=true
+echo $(date -u) "=> Successfuly created customer-manager-client"
+$KCADM create clients -r demo-realm -s clientId=curl -s publicClient="true" -s directAccessGrantsEnabled="true" -s "redirectUris=[\"http://localhost\"]" -s enabled=true
+echo $(date -u) "=> Successfuly created curl client"
+$KCADM create roles -r demo-realm -s name=customer-manager-role
+echo $(date -u) "=> Successfuly created the customer-manager-role"
+$KCADM add-roles --uusername customer-manager-user --rolename customer-manager-role -r demo-realm
+echo $(date -u) "=> Successfuly added role customer-manager-role to the customer-manager-user"
 

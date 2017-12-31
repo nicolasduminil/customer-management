@@ -1,4 +1,0 @@
-/subsystem=infinispan/cache-container=oauth20:add(jndi-name="infinispan/oauth20-container", default-cache="clientid")
-/subsystem=infinispan/cache-container=oauth20/local-cache=clientid:add()
-/subsystem=infinispan/cache-container=oauth20/local-cache=clientid/component=transaction:write-attribute(name=mode, value="NONE")
-/subsystem=infinispan/cache-container=oauth20/local-cache=clientid/component=eviction:write-attribute(name=strategy, value="NONE")

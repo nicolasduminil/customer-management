@@ -1,0 +1,2 @@
+RESULT=$(curl --data "grant_type=password&client_id=curl&username=customer-manager-user&password=California1" http://localhost:18080/auth/realms/demo-realm/protocol/openid-connect/token}
+TOKEN=${echo $RESULT | sed 's/.*access_token":"//g' | sed 's/".*//g'}

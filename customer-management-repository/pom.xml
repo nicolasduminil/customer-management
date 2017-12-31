@@ -6,7 +6,7 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>customer-management-repository</artifactId>
-  <name>Customer Management :: Repository Module</name>
+  <name>Customer Management :: The Repository Module</name>
   <dependencies>
     <dependency>
       <groupId>javax</groupId>

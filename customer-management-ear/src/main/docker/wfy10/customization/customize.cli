@@ -13,4 +13,3 @@ module add --name=com.oracle --resources=/opt/jboss/wildfly/customization/ojdbc6
 /subsystem=datasources/data-source=ExampleDS: write-attribute(name=background-validation-millis, value=60000)
 /subsystem=datasources/data-source=ExampleDS: write-attribute(name=flush-strategy, value=IdleConnections)
 stop-embedded-server
-

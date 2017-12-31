@@ -8,6 +8,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import org.apache.commons.lang3.builder.*;
+import org.jboss.resteasy.spi.*;
+import org.keycloak.*;
+import org.keycloak.representations.*;
 import org.slf4j.*;
 
 import fr.simplex_software.customer_management.data.*;
@@ -19,10 +22,13 @@ import fr.simplex_software.customer_management.facade.*;
 public class CustomerManagementResource
 {
   private Logger slf4jLogger = LoggerFactory.getLogger(CustomerManagementResource.class);
-  
+
+  @Context
+  private HttpRequest httpRequest;
+
   @EJB
   private CustomerManagementFacade facade;
-    
+
   @POST
   public Response createCustomer(Customer customer)
   {
@@ -61,18 +67,28 @@ public class CustomerManagementResource
     facade.removeAndFlush(id);
     return Response.ok().build();
   }
-  
+
   @GET
   @Path("firstName/{firstName}")
-   public Response getCustomersByFirstName (@PathParam("firstName") String firstName)
+  public Response getCustomersByFirstName(@PathParam("firstName") String firstName)
   {
     slf4jLogger.debug("*** getCustomerByFirstName(): {}", firstName);
     return Response.ok().entity(facade.findByFirstName(firstName)).build();
   }
-  
+
   @GET
   public Response getCustomers()
   {
+    KeycloakSecurityContext securityContext = (KeycloakSecurityContext) httpRequest.getAttribute(KeycloakSecurityContext.class.getName());
+    AccessToken accessToken = securityContext.getToken();
+    slf4jLogger.info("User {} with email {} made request to /customers REST endpoint", accessToken.getPreferredUsername(), accessToken.getEmail());
     return Response.ok().entity(facade.findAll()).build();
+  }
+
+  @GET
+  @Path("secured")
+  public String getSecured()
+  {
+    return new String("secured");
   }
 }
