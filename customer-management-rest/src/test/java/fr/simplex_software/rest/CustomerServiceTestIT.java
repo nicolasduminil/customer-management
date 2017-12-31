@@ -33,7 +33,7 @@ public class CustomerServiceTestIT
   public void setUp() throws Exception
   {
     client = ClientBuilder.newClient();
-    webTarget = client.target("http://localhost:8080/customer-management-rest/services/customers");
+    webTarget = client.target("http://localhost:8080/customer-management/services/customers");
     token = Keycloak.getInstance("http://localhost:8180/auth", "master", "customer-admin", "California1", "curl").tokenManager().getAccessToken().getToken();
   }
 

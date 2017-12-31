@@ -71,11 +71,11 @@
       <artifactId>keycloak-adapter-core</artifactId>
       <scope>provided</scope>
     </dependency>
-      <dependency>
-        <groupId>org.keycloak</groupId>
-        <artifactId>keycloak-admin-client</artifactId>
-        <scope>provided</scope>
-      </dependency>
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-admin-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -84,13 +84,13 @@
     <dependency>
       <groupId>fr.simplex-software.rest</groupId>
       <artifactId>customer-management-repository</artifactId>
-      <!-- scope>provided</scope-->
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>fr.simplex-software.rest</groupId>
       <artifactId>customer-management-facade</artifactId>
       <type>ejb</type>
-      <!-- scope>provided</scope-->
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>fr.simplex-software.rest</groupId>
@@ -106,6 +106,18 @@
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
