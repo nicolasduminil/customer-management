@@ -23,15 +23,17 @@ services:
       - 9990:9990
     links:
       - db:db
+      - keycloak:keycloak
     depends_on:
      - "db"
+     - "keycloak"
 
   keycloak:
     image: jboss/keycloak:latest
     volumes:
       - ./keycloak/customization:/opt/jboss/keycloak/customization/
     container_name: keycloak
-    entrypoint: /opt/jboss/docker-entrypoint.sh -b 0.0.0.0
+    entrypoint: /opt/jboss/docker-entrypoint.sh -b 0.0.0.0 -bmanagement 0.0.0.0
     ports:
       - 18080:8080
       - 19990:9990

@@ -15,17 +15,15 @@ echo $(date -u) "=> Customizing the Keycloak server"
 #$JBOSS_CLI --file=keycloak/customization/customize.cli
 echo $(date -u) "=> Successfuly executed customize.cli"
 $KCADM config credentials --server http://localhost:8080/auth --realm master --user nicolas --password California1
-$KCADM create realms -s realm=demo-realm -s enabled=true 
-echo $(date -u) "=> Successfuly created demo-realm"
-$KCADM create users -r demo-realm -s username=customer-manager-user -s enabled=true
-$KCADM set-password -r demo-realm --username customer-manager-user --new-password California1
-echo $(date -u) "=> Successfuly created customer-manager-user"
-$KCADM create clients -r demo-realm -s clientId=customer-manager-client -s bearerOnly="true" -s "redirectUris=[\"http://localhost:8080/customer-management/*\"]" -s enabled=true
+$KCADM create users -r master -s username=customer-admin -s enabled=true
+$KCADM set-password -r master --username customer-admin --new-password California1
+echo $(date -u) "=> Successfuly created customer-admin"
+$KCADM create clients -r master -s clientId=customer-manager-client -s bearerOnly="true" -s "redirectUris=[\"http://localhost:8080/customer-management/*\"]" -s enabled=true
 echo $(date -u) "=> Successfuly created customer-manager-client"
-$KCADM create clients -r demo-realm -s clientId=curl -s publicClient="true" -s directAccessGrantsEnabled="true" -s "redirectUris=[\"http://localhost\"]" -s enabled=true
+$KCADM create clients -r master -s clientId=curl -s publicClient="true" -s directAccessGrantsEnabled="true" -s "redirectUris=[\"http://localhost\"]" -s enabled=true
 echo $(date -u) "=> Successfuly created curl client"
-$KCADM create roles -r demo-realm -s name=customer-manager-role
-echo $(date -u) "=> Successfuly created the customer-manager-role"
-$KCADM add-roles --uusername customer-manager-user --rolename customer-manager-role -r demo-realm
-echo $(date -u) "=> Successfuly added role customer-manager-role to the customer-manager-user"
+$KCADM create roles -r master -s name=customer-manager
+echo $(date -u) "=> Successfuly created the customer-manager role"
+$KCADM add-roles --uusername customer-admin --rolename customer-manager -r master
+echo $(date -u) "=> Successfuly added role customer-manage to the customer-admin"
 

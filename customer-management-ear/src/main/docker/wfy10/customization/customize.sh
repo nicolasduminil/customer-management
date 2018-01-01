@@ -15,15 +15,15 @@ function wait_for_jdbc_connection() {
   done
 }
 
-echo $(date -u) "=> Replacing H2 JDBC drivers and ExampleDS datasource by the Oracle XE ones"
-$JBOSS_CLI --file=$WILDFLY_HOME/customization/customize.cli > /dev/null
+#echo $(date -u) "=> Replacing H2 JDBC drivers and ExampleDS datasource by the Oracle XE ones"
+#$JBOSS_CLI --file=$WILDFLY_HOME/customization/customize.cli > /dev/null
 
-echo $(date -u) "=> Oracle JDBC drivers and ExampleDS datasource customization terminated. Waiting for the Wildfly server to reload"
-$JBOSS_CLI -c ":reload" > /dev/null
-wait_for_server
-echo $(date -u) "=> The Wildfly server started successfully"
-echo $(date -u) "=> Testing the new Wildfly ExampleDS datasource"
-wait_for_jdbc_connection
-echo $(date -u) "=> The Wildfly ExampleDS datasource for Oracle test has succeeded"
+#echo $(date -u) "=> Oracle JDBC drivers and ExampleDS datasource customization terminated. Waiting for the Wildfly server to reload"
+#$JBOSS_CLI -c ":reload" > /dev/null
+#wait_for_server
+#echo $(date -u) "=> The Wildfly server started successfully"
+#echo $(date -u) "=> Testing the new Wildfly ExampleDS datasource"
+#wait_for_jdbc_connection
+#echo $(date -u) "=> The Wildfly ExampleDS datasource for Oracle test has succeeded"
 
 $WILDFLY_HOME/bin/add-user.sh nicolas California1$
