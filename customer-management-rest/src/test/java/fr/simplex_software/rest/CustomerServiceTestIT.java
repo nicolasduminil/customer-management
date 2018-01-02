@@ -26,7 +26,7 @@ public class CustomerServiceTestIT
   @BeforeClass
   public static void init() throws Exception
   {
-    token = Keycloak.getInstance("http://172.18.0.3:8080/auth", "master", "customer-admin", "California1", "curl").tokenManager().getAccessToken().getToken();
+    token = Keycloak.getInstance("http://172.18.0.2:8080/auth", "master", "customer-admin", "admin", "curl").tokenManager().getAccessToken().getToken();
   }
 
   @Before

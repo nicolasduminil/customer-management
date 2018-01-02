@@ -1,17 +1,5 @@
 version: "2"
 services:
-  db:
-    image: oracle/database:11.2.0.2-xe
-    volumes:
-      - ./oraxe/customization:/u01/app/oracle/scripts/startup
-    container_name: oraxe
-    shm_size: 1g
-    ports:
-      - 1521:1521
-      - 80:8080
-    environment:
-      ORACLE_PWD: California1
-
   wfy10:
     image: jboss/wildfly:10.1.0.Final
     volumes:
@@ -21,12 +9,8 @@ services:
     ports:
       - 8080:8080
       - 9990:9990
-    links:
-      - db:db
-      - keycloak:keycloak
     depends_on:
-     - "db"
-     - "keycloak"
+      - "keycloak"
 
   keycloak:
     image: jboss/keycloak:latest
@@ -38,10 +22,6 @@ services:
       - 18080:8080
       - 19990:9990
     environment:
-      KEYCLOAK_USER: nicolas
-      KEYCLOAK_PASSWORD: California1  
-    links:
-     - db:db
-    depends_on:
-     - "db"
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
      
