@@ -1,4 +1,4 @@
-docker exec -ti keycloak keycloak/customization/customize.sh
-docker exec -ti wfy10 wildfly/customization/customize.sh
-docker restart wfy10
-docker exec -ti wfy10 wildfly/customization/deploy.sh
+docker exec -ti keycloak keycloak/customization/customize.sh > /dev/null
+docker exec -ti wfy10 wildfly/customization/customize.sh > /dev/null
+docker restart wfy10 > /dev/null
+docker exec -ti wfy10 wildfly/customization/deploy.sh > /dev/null
